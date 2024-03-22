@@ -76,6 +76,21 @@ async function run() {
             const query = { _id: new ObjectId(id) };
             const result = await bookingCollection.deleteOne(query);
             res.send(result);
+        });
+
+        app.patch('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedBooking = req.body;
+
+            const updateDoc = {
+                $set: {
+                    status: updatedBooking.status
+                },
+            };
+
+            const result = await bookingCollection.updateOne(filter, updateDoc);
+            res.send(result);
         })
 
         // Send a ping to confirm a successful connection
