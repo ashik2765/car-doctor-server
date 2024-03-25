@@ -26,13 +26,13 @@ const client = new MongoClient(uri, {
 });
 
 const verifyJWT = (req, res, next) => {
-    
+
     const authorization = req.headers.authorization;
     if (!authorization) {
         return res.status(404).send({ error: true, message: 'Unauthorization Access' });
     }
     const token = authorization.split(' ')[1];
-    
+
     jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded) => {
         if (error) {
             return res.status(404).send({ error: true, message: 'Unauthorization Access' });
@@ -53,7 +53,7 @@ async function run() {
         //jwt route
         app.post('/jwt', (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '1h' });
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: 5 });
             res.send({ token });
         });
 
@@ -79,6 +79,10 @@ async function run() {
 
         //Booking service
         app.get('/bookings', verifyJWT, async (req, res) => {
+            const decoded = req.decoded;
+            if (decoded.email !== req.query.email) {
+                res.status(401).send({ error: 1, message: 'Forbidded access' })
+            }
             let query = {};
             if (req.query?.email) {
                 query = { email: req.query.email }
