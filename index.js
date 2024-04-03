@@ -58,14 +58,14 @@ async function run() {
         });
 
         //Services route
-        app.get('/services', async (req, res) => {
-            // const cursor = serviceCollection.find();
-            // const result = await cursor.toArray();
-            const result = await serviceCollection.find().toArray();
+        app.get('/servicess', async (req, res) => {
+            const cursor = serviceCollection.find();
+            const result = await cursor.toArray();
+            // const result = await serviceCollection.find().toArray();
             res.send(result);
         });
 
-        app.get('/services/:id', async (req, res) => {
+        app.get('/servicess/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const options = {
